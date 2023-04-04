@@ -7,7 +7,7 @@ const cors = require("@koa/cors");
 const app = new Koa();
 const router = new Router();
 
-const PORT = process.env.PORT || 4000;
+const PORT = 8080;
 
 router.get("/api/test", (ctx) => {
   ctx.body = "Hello, World!";
