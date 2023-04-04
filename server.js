@@ -49,5 +49,5 @@ io.on("connection", (socket) => {
 
 // 서버를 실행합니다.
 server.listen(PORT, () => {
-  console.log("Server listening on port 8000");
+  console.log(`Server listening on port ${PORT}`);
 });
