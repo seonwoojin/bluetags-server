@@ -3,6 +3,9 @@ const Router = require("koa-router");
 const http = require("http");
 const socketIO = require("socket.io");
 const cors = require("@koa/cors");
+const bodyParser = require("koa-bodyparser");
+const webpush = require("web-push");
+require("dotenv").config();
 
 const app = new Koa();
 const router = new Router();
@@ -18,8 +21,41 @@ const corsOptions = {
   Credential: true,
 };
 
+webpush.setVapidDetails(
+  "mailto:example@yourdomain.org",
+  process.env.APPLICATION_PUBLIC_KEY,
+  process.env.APPLICATION_PRIVATE_KEY
+);
+
+app.use(bodyParser());
 app.use(cors(corsOptions));
 app.use(router.routes()).use(router.allowedMethods());
+
+const subscriptions = [];
+
+router.get("/api/key", (ctx) => {
+  ctx.body = { key: process.env.APPLICATION_PUBLIC_KEY };
+  ctx.status = 200;
+});
+
+router.post("/api/subscribe", (ctx) => {
+  const subscription = ctx.request.body;
+  console.log("Push Subscription:", subscription);
+  subscriptions.push(subscription);
+  ctx.status = 200;
+});
+
+router.get("/api/push", (ctx) => {
+  const payload = "123123123";
+  webpush
+    .sendNotification(subscriptions[0], payload)
+    .then(() => {
+      ctx.status = 200;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+});
 
 const server = http.createServer(app.callback());
 
@@ -40,6 +76,15 @@ io.on("connection", (socket) => {
   socket.on("chat message", (msg) => {
     console.log("message: " + msg);
     io.emit("chat message", msg);
+    const payload = "123123123";
+    webpush
+      .sendNotification(subscriptions[0], payload)
+      .then(() => {
+        ctx.status = 200;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   });
 
   socket.on("disconnect", () => {
