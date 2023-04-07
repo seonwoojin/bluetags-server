@@ -79,9 +79,7 @@ io.on("connection", (socket) => {
     const payload = "123123123";
     webpush
       .sendNotification(subscriptions[0], payload)
-      .then(() => {
-        ctx.status = 200;
-      })
+      .then(() => {})
       .catch((error) => {
         console.error(error);
       });
