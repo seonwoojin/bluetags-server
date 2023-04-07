@@ -77,12 +77,14 @@ io.on("connection", (socket) => {
     console.log("message: " + msg);
     io.emit("chat message", msg);
     const payload = "123123123";
-    webpush
-      .sendNotification(subscriptions[0], payload)
-      .then(() => {})
-      .catch((error) => {
-        console.error(error);
-      });
+    subscriptions.map((data, index) => {
+      webpush
+        .sendNotification(subscriptions[index], payload)
+        .then(() => {})
+        .catch((error) => {
+          console.error(error);
+        });
+    });
   });
 
   socket.on("disconnect", () => {
