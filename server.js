@@ -31,7 +31,7 @@ app.use(bodyParser());
 app.use(cors(corsOptions));
 app.use(router.routes()).use(router.allowedMethods());
 
-const subscriptions = [];
+let subscriptions = [];
 
 router.post("/api/subscribe", (ctx) => {
   const subscription = ctx.request.body;
