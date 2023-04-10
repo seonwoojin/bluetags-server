@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
   socket.on("chat message", async (msg) => {
     console.log(subscriptions.length);
     try {
-      for (const data of subscriptions) {
+      for (let data of subscriptions) {
         try {
           await webpush.sendNotification(data, JSON.stringify(msg));
         } catch (error) {
