@@ -73,18 +73,23 @@ io.on("connection", (socket) => {
   console.log("A user connected.");
 
   // 클라이언트와의 이벤트 핸들러를 등록합니다.
-  socket.on("chat message", (msg) => {
+  socket.on("chat message", async (msg) => {
     console.log("message: " + msg);
     io.emit("chat message", msg);
-    const payload = "123123123";
-    subscriptions.map((data, index) => {
-      webpush
-        .sendNotification(subscriptions[index], payload)
-        .then(() => {})
-        .catch((error) => {
-          console.error(error);
-        });
-    });
+    try {
+      await Promise.all(
+        subscriptions.map((data) => {
+          webpush
+            .sendNotification(data, msg)
+            .then(() => {})
+            .catch((error) => {
+              console.error(error);
+            });
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   socket.on("disconnect", () => {
