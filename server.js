@@ -41,20 +41,10 @@ router.get("/api/key", (ctx) => {
 router.post("/api/subscribe", (ctx) => {
   const subscription = ctx.request.body;
   console.log("Push Subscription:", subscription);
-  subscriptions.push(subscription);
+  if (!subscriptions.some((sub) => sub.endpoint === subscription.endpoint)) {
+    subscriptions.push(subscription);
+  }
   ctx.status = 200;
-});
-
-router.get("/api/push", (ctx) => {
-  const payload = "123123123";
-  webpush
-    .sendNotification(subscriptions[0], payload)
-    .then(() => {
-      ctx.status = 200;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
 });
 
 const server = http.createServer(app.callback());
