@@ -74,13 +74,11 @@ io.on("connection", (socket) => {
 
   // 클라이언트와의 이벤트 핸들러를 등록합니다.
   socket.on("chat message", async (msg) => {
-    console.log(msg);
-    io.emit("chat message", msg);
     try {
       await Promise.all(
         subscriptions.map((data) => {
           webpush
-            .sendNotification(data, JSON.stringify({ title: "Asdasdas" }))
+            .sendNotification(data, JSON.stringify(msg))
             .then(() => {})
             .catch((error) => {
               console.error(error);
