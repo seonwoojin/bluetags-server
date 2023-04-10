@@ -65,16 +65,16 @@ io.on("connection", (socket) => {
   socket.on("chat message", async (msg) => {
     console.log(subscriptions.length);
     try {
-      await Promise.all(
-        subscriptions.map((data) => {
-          webpush
-            .sendNotification(data, JSON.stringify(msg))
-            .then(() => {})
-            .catch((error) => {
-              console.error(error);
-            });
-        })
-      );
+      for (const data of subscriptions) {
+        try {
+          await webpush.sendNotification(data, JSON.stringify(msg));
+        } catch (error) {
+          console.error(error);
+          subscriptions = subscriptions.filter(
+            (sub) => sub.endpoint !== data.endpoint
+          );
+        }
+      }
     } catch (error) {
       console.log(error);
     }
