@@ -37,7 +37,6 @@ router.post("/api/subscribe", (ctx) => {
   const subscription = ctx.request.body;
   console.log("Push Subscription:", subscription);
   const requestApiSecret = ctx.request.header["x-api-secret"];
-  console.log(requestApiSecret, process.env.API_KEY);
   if (process.env.API_KEY !== requestApiSecret) {
     ctx.throw(403, "Forbidden");
   }
@@ -64,6 +63,7 @@ io.on("connection", (socket) => {
 
   // 클라이언트와의 이벤트 핸들러를 등록합니다.
   socket.on("chat message", async (msg) => {
+    console.log(subscriptions.length);
     try {
       await Promise.all(
         subscriptions.map((data) => {
