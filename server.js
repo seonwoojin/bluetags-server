@@ -33,14 +33,14 @@ app.use(router.routes()).use(router.allowedMethods());
 
 const subscriptions = [];
 
-router.get("/api/key", (ctx) => {
-  ctx.body = { key: process.env.APPLICATION_PUBLIC_KEY };
-  ctx.status = 200;
-});
-
 router.post("/api/subscribe", (ctx) => {
   const subscription = ctx.request.body;
   console.log("Push Subscription:", subscription);
+  const requestApiSecret = ctx.request.header["x-api-secret"];
+  console.log(requestApiSecret, process.env.API_KEY);
+  if (process.env.API_KEY !== requestApiSecret) {
+    ctx.throw(403, "Forbidden");
+  }
   if (!subscriptions.some((sub) => sub.endpoint === subscription.endpoint)) {
     subscriptions.push(subscription);
   }
