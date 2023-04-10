@@ -80,7 +80,7 @@ io.on("connection", (socket) => {
       await Promise.all(
         subscriptions.map((data) => {
           webpush
-            .sendNotification(data, msg)
+            .sendNotification(data, JSON.stringify(msg))
             .then(() => {})
             .catch((error) => {
               console.error(error);
