@@ -36,11 +36,7 @@ const subscriptions = [];
 router.post("/api/subscribe", (ctx) => {
   const subscription = ctx.request.body;
   console.log("Push Subscription:", subscription);
-  const requestApiSecret = ctx.request.header["x-api-secret"];
-  console.log(requestApiSecret, process.env.API_KEY);
-  if (process.env.API_KEY !== requestApiSecret) {
-    ctx.throw(403, "Forbidden");
-  }
+
   if (!subscriptions.some((sub) => sub.endpoint === subscription.endpoint)) {
     subscriptions.push(subscription);
   }
