@@ -45,7 +45,12 @@ router.post("/api/subscribe", async (ctx) => {
     subscriptions.push(subscription);
     await axios.post(
       "https://www.bluetags.app/api/admin/create-subscription",
-      subscription
+      subscription,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+        },
+      }
     );
   }
   ctx.status = 200;
