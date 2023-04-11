@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
 
   // 클라이언트와의 이벤트 핸들러를 등록합니다.
   socket.on("chat message", async (msg) => {
-    console.log(subscriptions.length);
+    console.log(subscriptions);
     try {
       for (let data of subscriptions) {
         try {
