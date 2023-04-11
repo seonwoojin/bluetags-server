@@ -43,9 +43,8 @@ router.post("/api/subscribe", async (ctx) => {
   }
   if (!subscriptions.some((sub) => sub.endpoint === subscription.endpoint)) {
     subscriptions.push(subscription);
-    //await fetch("https://www.bluetags.app/api/admin/create-subscription", {
     await axios.post(
-      "http://localhost:3000/api/admin/create-subscription",
+      "https://www.bluetags.app/api/admin/create-subscriptionn",
       subscription
     );
   }
