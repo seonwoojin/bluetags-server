@@ -114,5 +114,5 @@ server.listen(PORT, async () => {
       },
     }
   );
-  console.log(prevSub.data);
+  subscriptions = prevSub;
 });
