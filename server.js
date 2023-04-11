@@ -33,7 +33,7 @@ app.use(router.routes()).use(router.allowedMethods());
 
 let subscriptions = [];
 
-router.post("/api/subscribe", (ctx) => {
+router.post("/api/subscribe", async (ctx) => {
   const subscription = ctx.request.body;
   console.log("Push Subscription:", subscription);
   const requestApiSecret = ctx.request.header["x-api-secret"];
@@ -42,6 +42,14 @@ router.post("/api/subscribe", (ctx) => {
   }
   if (!subscriptions.some((sub) => sub.endpoint === subscription.endpoint)) {
     subscriptions.push(subscription);
+    //await fetch("https://www.bluetags.app/api/admin/create-subscription", {
+    await fetch("http://localhost:3000/api/admin/create-subscription", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: subscription,
+    });
   }
   ctx.status = 200;
 });
