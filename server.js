@@ -5,6 +5,7 @@ const socketIO = require("socket.io");
 const cors = require("@koa/cors");
 const bodyParser = require("koa-bodyparser");
 const webpush = require("web-push");
+const { default: axios } = require("axios");
 require("dotenv").config();
 
 const app = new Koa();
@@ -43,13 +44,10 @@ router.post("/api/subscribe", async (ctx) => {
   if (!subscriptions.some((sub) => sub.endpoint === subscription.endpoint)) {
     subscriptions.push(subscription);
     //await fetch("https://www.bluetags.app/api/admin/create-subscription", {
-    await fetch("http://localhost:3000/api/admin/create-subscription", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: subscription,
-    });
+    await axios.post(
+      "http://localhost:3000/api/admin/create-subscription",
+      subscription
+    );
   }
   ctx.status = 200;
 });
