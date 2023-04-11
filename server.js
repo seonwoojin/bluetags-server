@@ -79,7 +79,15 @@ io.on("connection", (socket) => {
         try {
           await webpush.sendNotification(data, JSON.stringify(msg));
         } catch (error) {
-          console.error(error);
+          await axios.post(
+            "https://www.bluetags.app/api/admin/delete-subscription",
+            { endpoint: data.endpoint },
+            {
+              headers: {
+                Authorization: `Bearer ${process.env.API_KEY}`,
+              },
+            }
+          );
           subscriptions = subscriptions.filter(
             (sub) => sub.endpoint !== data.endpoint
           );
@@ -96,6 +104,15 @@ io.on("connection", (socket) => {
 });
 
 // 서버를 실행합니다.
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
   console.log(`Server listening on port ${PORT}`);
+  const prevSub = await axios.get(
+    "https://www.bluetags.app/api/admin/subscriptions",
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
+    }
+  );
+  console.log(prevSub);
 });
