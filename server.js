@@ -102,6 +102,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("delete newscard", async (msg) => {
+    try {
+      io.emit("delete newscard", msg);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("A user disconnected.");
   });
