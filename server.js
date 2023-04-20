@@ -94,6 +94,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("create newscard", async (msg) => {
+    try {
+      io.emit("create newscard", msg);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("A user disconnected.");
   });
