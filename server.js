@@ -110,6 +110,16 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("create discord post", async (msg) => {
+    try {
+      await axios.post("https://www.bluetags.app/api/admin/create-rawData", {
+        data: JSON.stringify(msg),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("A user disconnected.");
   });
