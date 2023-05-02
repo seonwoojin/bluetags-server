@@ -121,9 +121,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log("A user disconnected.");
-  });
+  socket.on("disconnect", () => {});
 });
 
 // 서버를 실행합니다.
