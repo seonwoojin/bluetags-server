@@ -112,6 +112,8 @@ io.on("connection", (socket) => {
 
   socket.on("create discord post", async (msg) => {
     try {
+      console.log(msg);
+      console.log(typeof msg);
       await axios.post("https://www.bluetags.app/api/admin/create-rawData", {
         data: JSON.stringify(msg),
       });
