@@ -114,9 +114,17 @@ io.on("connection", (socket) => {
     try {
       console.log(msg);
       console.log(typeof msg);
-      await axios.post("https://www.bluetags.app/api/admin/create-rawData", {
-        data: JSON.stringify(msg),
-      });
+      await axios.post(
+        "https://www.bluetags.app/api/admin/create-rawData",
+        {
+          data: JSON.stringify(msg),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.API_KEY}`,
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
