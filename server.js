@@ -68,6 +68,7 @@ const io = socketIO(server, {
 
 // Socket.io 이벤트 핸들러를 등록합니다.
 io.on("connection", (socket) => {
+  console.log("입장");
   // 클라이언트와의 이벤트 핸들러를 등록합니다.
   socket.on("chat message", async (msg) => {
     try {
