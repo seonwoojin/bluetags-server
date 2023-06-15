@@ -66,9 +66,28 @@ const io = socketIO(server, {
   },
 });
 
+async function abc() {
+  const btcPrice = await axios.get(
+    "https://api.coinpaprika.com/v1/tickers/btc-bitcoin"
+  );
+  const ethPrice = await axios.get(
+    "https://api.coinpaprika.com/v1/tickers/eth-ethereum"
+  );
+
+  await axios.post("https://www.bluetags.app/api/info/coin", {
+    btcPrice: btcPrice.data,
+    ethPrice: ethPrice.data,
+  });
+}
+
+abc();
+
+setInterval(async () => {
+  await abc();
+}, [600000]);
+
 // Socket.io 이벤트 핸들러를 등록합니다.
 io.on("connection", (socket) => {
-  console.log("입장");
   // 클라이언트와의 이벤트 핸들러를 등록합니다.
   socket.on("chat message", async (msg) => {
     try {
