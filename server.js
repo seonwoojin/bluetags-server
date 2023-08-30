@@ -184,7 +184,6 @@ io.on("connection", (socket) => {
 
   socket.on("join room", async (msg) => {
     try {
-      console.log(msg);
       socket.join(msg);
     } catch (error) {
       console.log(error);
@@ -193,7 +192,7 @@ io.on("connection", (socket) => {
 
   socket.on("create user message", async (msg) => {
     try {
-      io.to(msg.roomName).emit("create user message", msg);
+      io.to(msg.room).emit("create user message", msg);
     } catch (error) {
       console.log(error);
     }
@@ -217,7 +216,6 @@ io.on("connection", (socket) => {
 
   socket.on("create discord post", async (msg) => {
     try {
-      console.log(msg);
       console.log(typeof msg);
       await axios.post(
         "https://www.bluetags.app/api/admin/create-rawData",
@@ -235,9 +233,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log("disc");
-  });
+  socket.on("disconnect", () => {});
 });
 
 // 서버를 실행합니다.
