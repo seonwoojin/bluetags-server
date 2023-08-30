@@ -5,6 +5,7 @@ const socketIO = require("socket.io");
 const cors = require("@koa/cors");
 const bodyParser = require("koa-bodyparser");
 const webpush = require("web-push");
+const Verifier = require("google-play-billing-validator");
 const { default: axios } = require("axios");
 require("dotenv").config();
 
@@ -13,8 +14,75 @@ const router = new Router();
 
 const PORT = 8080;
 
+const options = {
+  email: process.env.CLIENT_EMAIL,
+  key: process.env.PRIVATE_KEY,
+};
+
+const verifier = new Verifier(options);
+
 router.get("/api/test", (ctx) => {
   ctx.body = "Hello, World!";
+});
+
+router.post("/api/validation/google/purchase", (ctx) => {
+  let receipt = {
+    packageName: ctx.request.body.purchase.packageNameAndroid,
+    productId: ctx.request.body.purchase.productId,
+    purchaseToken: ctx.request.body.purchase.purchaseToken,
+  };
+
+  let promiseData = verifier.verifyINAPP(receipt);
+
+  promiseData
+    .then(function (response) {
+      console.log(response);
+      // Yay! Purchase is valid
+      // See response structure below
+    })
+    .then(function (response) {
+      // Here for example you can chain your work if purchase is valid
+      // eg. add coins to the user profile, etc
+      // If you are new to promises API
+      // Awesome docs: https://developers.google.com/web/fundamentals/primers/promises
+    })
+    .catch(function (error) {
+      console.log(error);
+      // Purchase is not valid or API error
+      // See possible error messages below
+    });
+
+  ctx.status = 200;
+});
+
+router.post("/api/validation/google/subscription", (ctx) => {
+  let receipt = {
+    packageName: ctx.request.body.purchase.packageNameAndroid,
+    productId: ctx.request.body.purchase.productId,
+    purchaseToken: ctx.request.body.purchase.purchaseToken,
+  };
+
+  let promiseData = verifier.verifySub(receipt);
+
+  promiseData
+    .then(function (response) {
+      console.log(response);
+      // Yay! Purchase is valid
+      // See response structure below
+    })
+    .then(function (response) {
+      // Here for example you can chain your work if purchase is valid
+      // eg. add coins to the user profile, etc
+      // If you are new to promises API
+      // Awesome docs: https://developers.google.com/web/fundamentals/primers/promises
+    })
+    .catch(function (error) {
+      console.log(error);
+      // Purchase is not valid or API error
+      // See possible error messages below
+    });
+
+  ctx.status = 200;
 });
 
 const corsOptions = {
@@ -114,6 +182,23 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("join room", async (msg) => {
+    try {
+      console.log(msg);
+      socket.join(msg);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.on("create user message", async (msg) => {
+    try {
+      socket.to(msg.roomName).emit("create user message", msg);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   socket.on("create newscard", async (msg) => {
     try {
       io.emit("create newscard", msg);
@@ -150,7 +235,9 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {});
+  socket.on("disconnect", () => {
+    console.log("disc");
+  });
 });
 
 // 서버를 실행합니다.
