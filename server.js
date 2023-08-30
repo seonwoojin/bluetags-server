@@ -193,7 +193,7 @@ io.on("connection", (socket) => {
 
   socket.on("create user message", async (msg) => {
     try {
-      socket.to(msg.roomName).emit("create user message", msg);
+      io.to(msg.roomName).emit("create user message", msg);
     } catch (error) {
       console.log(error);
     }
