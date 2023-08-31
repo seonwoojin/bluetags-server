@@ -190,9 +190,10 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("create user message", async (msg) => {
+  socket.on("create user message", async (msg, done) => {
     try {
       io.to(msg.room).emit("create user message", msg);
+      done();
     } catch (error) {
       console.log(error);
     }
