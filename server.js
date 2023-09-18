@@ -199,6 +199,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("create complete", async (msg) => {
+    try {
+      io.to(msg.room).emit("create complete", msg);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   socket.on("create newscard", async (msg) => {
     try {
       io.emit("create newscard", msg);
