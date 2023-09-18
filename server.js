@@ -201,7 +201,7 @@ io.on("connection", (socket) => {
 
   socket.on("create complete", async (msg) => {
     try {
-      io.to(msg.room).emit("create complete", msg);
+      io.to(msg.communityId).emit("create complete", msg);
     } catch (error) {
       console.log(error);
     }
