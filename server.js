@@ -184,6 +184,7 @@ io.on("connection", (socket) => {
 
   socket.on("join room", async (msg) => {
     try {
+      console.log(msg);
       socket.join(msg);
     } catch (error) {
       console.log(error);
@@ -202,6 +203,14 @@ io.on("connection", (socket) => {
   socket.on("create complete", async (msg) => {
     try {
       io.to(msg.communityId).emit("create complete", msg);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.on("create complete include image", async (msg) => {
+    try {
+      io.to(msg.communityId).emit("create complete include image", msg);
     } catch (error) {
       console.log(error);
     }
