@@ -111,7 +111,7 @@ router.post("/api/subscribe", async (ctx) => {
   if (!subscriptions.some((sub) => sub.endpoint === subscription.endpoint)) {
     subscriptions.push(subscription);
     await axios.post(
-      "https://www.bluetags.app/api/admin/create-subscription",
+      "https://www.bluetags.app/api/admin/subscriptions",
       subscription,
       {
         headers: {
@@ -164,8 +164,7 @@ io.on("connection", (socket) => {
           await webpush.sendNotification(data, JSON.stringify(msg));
         } catch (error) {
           await axios.post(
-            "https://www.bluetags.app/api/admin/delete-subscription",
-            { endpoint: data.endpoint },
+            `https://www.bluetags.app/api/admin/subscriptions/${data.endpoint}`,
             {
               headers: {
                 Authorization: `Bearer ${process.env.API_KEY}`,
